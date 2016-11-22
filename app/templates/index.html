@@ -1,16 +1,37 @@
+{% import "bootstrap/wtf.html" as wtf %}
 {% extends "layout.html" %}
-{% block body %}
-    <form action="{{ url_for('.tweet') }}"  method=post>
-      <p>
-	Text:
-        <input type=text name=tweetText size=40>
-        <input type=submit value="Tweet">
-      </p>
-    </form>
+{% block page_content %}
+  <div class="container">
+    <div class="row">
+      {% if g.user %}
+        <a href="{{url_for('.logout') }}">
+          <img src="{{url_for('static', filename='sign-out.png') }}" alt="sign out">
+        </a>
+      {% else %}
+        <a href="{{ url_for('.login') }}">
+          <img src="{{url_for('static', filename='sign-in.png') }}" alt="sign in">
+        </a>
+      {% endif %}
+    </div>
 
-    <br/>
-    <h3>Mis tweets</h3>
+    <div class="row">
+      {{ wtf.quick_form(form, action=url_for('.tweet')) }}
+    </div>
 
-    # Si hay tweets mostrarlos
+    <div class="row">
+      {% if tweets %}
+        {% for tweet in tweets %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ tweet['name'] }}</h3>
+            </div>
+            <div class="panel-body">
+              {{ tweet['text']}}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
 
 {% endblock %}

@@ -1,6 +1,8 @@
-from flask import Flask, request, redirect, url_for, g, session, flash, render_template
+from flask import Flask, request, redirect, url_for, g, session, flash, render_template, jsonify
 from flask_oauthlib.client import OAuth
+import json
 from . import main, twitter
+from .forms import TweetForm
 
 @twitter.tokengetter
 def get_twitter_token(token=None):
@@ -20,21 +22,31 @@ def before_request():
 @main.route('/')
 def index():
     ''' main page '''
+    tweets = None
+    form = TweetForm()
     if g.user is not None:
-        # Ojo comprobar si hay tweets y pasarlo al html
         print "get tweets"
-#        resp = twitter.request(.....
+        req = twitter.get("https://api.twitter.com/1.1/statuses/home_timeline.json", data={"count":"20"})
+        tweets = parse_tweets(req.data) if req.status == 200 else None
+    return render_template('index.html', form=form, tweets=tweets)
 
-    return render_template('index.html')
-
+def parse_tweets(data):
+    tweets = []
+    for raw in data:
+        tw = {'text': raw['text'],
+              'id': raw['id_str'],
+              'name': raw['user']['name']}
+        tweets.append(tw)
+    return tweets
 
 @main.route('/login')
 def login():
     ''' Get auth token (request) '''
     callback_url=url_for('.oauthorized', next=request.args.get('next'))
-    return twitter.authorize(callback=callback_url or request.referrer or None)
+    flash('logueado correctamente')
+    return twitter.authorize(callback=callback_url
+                             or request.referrer or None)
 
-# Eliminar sesion
 @main.route('/logout')
 def logout():
     session.pop('twitter_oauth', None)
@@ -64,14 +76,15 @@ def follow():
 
 @main.route('/op4', methods=['POST'])
 def tweet():
-    # Paso 1: Si no estoy logueado redirigir a pagina de /login
-               # Usar g y redirect
-
-    # Paso 2: Obtener los datos a enviar
-               # Usar request (form)
+    form = TweetForm()
+    if g.user is None:
+        return redirect(url_for('.login'))
+    if form.validate_on_submit():
+        tuit = form.tweet_text.data
+        session = g.user
 
     # Paso 3: Construir el request a enviar con los datos del paso 2
-               # Utilizar alguno de los metodos de la instancia twitter (post, request, get, ...)
+    # Utilizar alguno de los metodos de la instancia twitter (post, request, get, ...)
 
     # Paso 4: Comprobar que todo fue bien (no hubo errores) e informar al usuario
                # La anterior llamada devuelve el response, mirar el estado (status)
