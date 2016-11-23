@@ -4,8 +4,7 @@ from flask_bootstrap import Bootstrap
 def create_app():
     flask = Flask(__name__)
     flask.config['DEBUG'] = True
-    bootstrap = Bootstrap()
-    bootstrap.init_app(flask)
+
     flask.secret_key = 'development'
 
     from .main.views import main as main_blueprint

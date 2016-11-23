@@ -1,37 +1,53 @@
-{% import "bootstrap/wtf.html" as wtf %}
+{% import "macros.html" as macros %}
 {% extends "layout.html" %}
+
 {% block page_content %}
-  <div class="container">
-    <div class="row">
-      {% if g.user %}
-        <a href="{{url_for('.logout') }}">
-          <img src="{{url_for('static', filename='sign-out.png') }}" alt="sign out">
-        </a>
-      {% else %}
-        <a href="{{ url_for('.login') }}">
-          <img src="{{url_for('static', filename='sign-in.png') }}" alt="sign in">
-        </a>
-      {% endif %}
-    </div>
 
-    <div class="row">
-      {{ wtf.quick_form(form, action=url_for('.tweet')) }}
-    </div>
-
-    <div class="row">
-      {% if tweets %}
-        {% for tweet in tweets %}
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{ tweet['name'] }}</h3>
-            </div>
-            <div class="panel-body">
-              {{ tweet['text']}}
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    </div>
+<div class="panel panel-warning">
+  <div class="panel-heading">
+    <h3 class="panel-title">Actions</h3>
   </div>
 
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-6">
+        {{ macros.follow_form(forms['follow']) }}
+      </div>
+      <div class="col-md-6">
+        {{ macros.tweet_form(forms['tweet']) }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        {{ macros.delete_form(forms['delete'])}}
+      </div>
+      <div class="col-md-6">
+        {{ macros.retweet_form(forms['retweet'])}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  {% if tweets %}
+  {% for tweet in tweets %}
+  <div class="column">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <div class="panel-title">
+          {{ tweet['name'] }} ({{ tweet['user_name'] }}) ID: {{ tweet['name_id'] }}
+        </div>
+      </div>
+      <div class="panel-body">
+        {{ tweet['text']}}
+      </div>
+      <div class="panel-footer">
+        {{ tweet['id'] }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
 {% endblock %}

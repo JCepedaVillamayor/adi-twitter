@@ -1,0 +1,87 @@
+{% macro tweet_form(form) %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Tweet</h3>
+    </div>
+    <div class="panel-body">
+      <form method="POST" action="{{ url_for('.tweet') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+          {{ form.tweet_text(class="form-control", placeholder="Your tweet here...") }}
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">
+            Tweet!!!
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro retweet_form(form) %}
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h3 class="panel-title">Retweet</h3>
+    </div>
+    <div class="panel-body">
+      <form method="POST" action="{{ url_for('.retweet') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+          {{ form.tweet_id(class="form-control", placeholder="Tweet ID...") }}
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-info">
+            Retweet!!!
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endmacro %}
+
+
+{% macro delete_form(form) %}
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Delete</h3>
+    </div>
+    <div class="panel-body">
+      <form method="POST" action="{{ url_for('.deleteTweet') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+          {{ form.tweet_id(class="form-control", placeholder="Tweet ID to delete...") }}
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-danger">
+            Delete!!!
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro follow_form(form) %}
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Follow</h3>
+    </div>
+    <div class="panel-body">
+      <form method="POST" action="{{ url_for('.follow') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+          {{ form.username(class="form-control", placeholder="Username...") }}
+        </div>
+        <div class="form-group">
+          {{ form.user_id(class="form-control", placeholder="User ID...") }}
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">
+            Follow!!!
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endmacro %}
