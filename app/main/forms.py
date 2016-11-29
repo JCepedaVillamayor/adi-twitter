@@ -12,5 +12,5 @@ class DeleteForm(FlaskForm):
     tweet_id = IntegerField('Delete Form', validators=[DataRequired()])
 
 class FollowForm(FlaskForm):
-    username = StringField('Follow Form', validators=[], description='username' )
-    user_id = StringField('', validators=[], description='user id')
+    username = StringField('Follow Form', validators=[DataRequired()], description='username' )
+    user_id = StringField('', validators=[DataRequired()], description='user id')
